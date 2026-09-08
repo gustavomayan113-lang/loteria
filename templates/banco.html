@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Banco de Dados</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style-admin.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <div class="banco-container">
+
+        <div class="cabecalho">
+
+            <div>
+
+                <h1>
+                    BANCO DE DADOS
+                </h1>
+
+                <p>
+                    somente administrador
+                </p>
+
+            </div>
+
+            <a href="/logout" class="logout">
+                SAIR
+            </a>
+
+        </div>
+
+        <div class="acoes-admin">
+
+        <a href="/exportar-planilha" class="btn-exportar">
+            BAIXAR PLANILHA
+        </a>
+
+        <form
+            action="/limpar-banco"
+            method="POST"
+            onsubmit="return confirmarLimpeza()"
+        >
+            <button type="submit" class="btn-limpar">
+                LIMPAR BANCO
+            </button>
+        </form>
+
+    </div>
+
+
+        <div class="configuracao-prazo">
+
+    <div class="configuracao-titulo">
+        <span>⚙</span>
+        <div>
+            <h2>Prazo dos jogos</h2>
+            <p>Defina até quando os jogos serão aceitos.</p>
+        </div>
+    </div>
+
+    <form action="/alterar-data" method="POST" class="form-data">
+
+        <div class="campo-data">
+            <label for="data_limite">
+                Data limite
+            </label>
+
+            <input
+                type="date"
+                id="data_limite"
+                name="data_limite"
+                required
+            >
+        </div>
+
+        <button type="submit" class="btn-salvar-data">
+            SALVAR DATA
+        </button>
+
+    </form>
+
+</div>
+
+
+        <div class="tabela-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Nome</th>
+
+                        <th>E-mail</th>
+
+                        <th>Números</th>
+
+                        <th>Quantidade</th>
+
+                        <th>Data</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for jogo in jogos %}
+
+                    <tr>
+
+                        <td>
+                            {{ jogo[0] }}
+                        </td>
+
+                        <td>
+                            {{ jogo[1] }}
+                        </td>
+
+                        <td>
+                            {{ jogo[2] }}
+                        </td>
+
+                        <td class="numeros">
+                            {{ jogo[3] }}
+                        </td>
+
+                        <td>
+                            {{ jogo[4] }}
+                        </td>
+
+                        <td>
+                            {{ jogo[5] }}
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="6" class="vazio">
+                            Nenhum jogo cadastrado.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+        function confirmarLimpeza() {
+
+            return confirm(
+                "⚠ ATENÇÃO ⚠\n\n" +
+                "Todos os jogos cadastrados serão apagados permanentemente.\n\n" +
+                "Esta ação NÃO pode ser desfeita.\n\n" +
+                "Deseja continuar?"
+            );
+
+        }
+    </script>
+
+</body>
+
+</html>
+

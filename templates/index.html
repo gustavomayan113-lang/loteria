@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loteria do Nior</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+
+       <div class="logo-lotofacil">
+            <div class="logo-titulo">
+                <span class="loto">LOTO</span><span class="facil">FÁCIL</span>
+            </div>
+
+            <div class="logo-da">da</div>
+
+            <div class="faixa-independencia">
+                INDEPENDÊNCIA
+            </div>
+        </div>
+        <div class="painel">
+
+            <input type="text" id="nome" placeholder="Digite seu nome">
+
+            <input type="text" id="email" placeholder="DIgite seu E-mail">
+
+            <button onclick="gerarAleatorio()">GERAR JOGO ALEATÓRIO</button>
+            
+            <button onclick="limparJogo()" class="btn-limpar">
+                LIMPAR JOGO
+            </button>
+
+            <button onclick="salvarJogo()">
+                SALVAR JOGO
+            </button>
+
+            <a href="/login">
+                <button>Ver Banco de Dados</button>
+            </a>
+
+        </div>
+
+        <div class="prazo-jogos">
+            🟢 Aceitando jogos até {{ data_limite }}
+        </div>
+
+        <h2 id="mensagem"></h2>
+
+        <div id="tabela" class="tabela"></div>
+
+
+
+    </div>
+
+   <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
