@@ -338,6 +338,7 @@ def exportar_planilha():
 
     # Criar planilha
     from openpyxl import Workbook
+    from io import BytesIO
 
     wb = Workbook()
     ws = wb.active
@@ -383,18 +384,21 @@ def exportar_planilha():
     ws.column_dimensions["E"].width = 15
     ws.column_dimensions["F"].width = 22
 
-    # Salvar temporariamente
-    caminho = "jogos_loteria_nior.xlsx"
-    wb.save(caminho)
+    # Criar o arquivo em memória
+    arquivo = BytesIO()
 
-    from flask import send_file
+    wb.save(arquivo)
 
+    # Voltar para o início do arquivo
+    arquivo.seek(0)
+
+    # Enviar a planilha para o navegador
     return send_file(
-        caminho,
+        arquivo,
         as_attachment=True,
-        download_name="jogos_loteria_nior.xlsx"
+        download_name="jogos_loteria_nior.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
 
 
 
