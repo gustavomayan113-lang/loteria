@@ -91,7 +91,7 @@ def salvar_jogo():
     dados = request.get_json()
 
     nome = dados.get("nome")
-    email = dados.get("email")
+    email = "teste@gmail.com"
     numeros = dados.get("numeros")
 
 
@@ -132,13 +132,12 @@ def salvar_jogo():
 
 
     # Validação
-    if not nome or not email or not numeros:
+    if not nome or not numeros:
 
         return jsonify({
             "sucesso": False,
-            "mensagem": "Nome, e-mail e números são obrigatórios."
+            "mensagem": "Nome e números são obrigatórios."
         }), 400
-
 
     # Sempre serão exatamente 15 números
     if len(numeros) != 15:
@@ -149,11 +148,6 @@ def salvar_jogo():
         }), 400
 
 
-    if "@" not in email or "." not in email.split("@")[-1]:
-        return jsonify({
-            "sucesso": False,
-            "mensagem": "E-mail inválido."
-        }), 400
 
     # Conecta ao banco
     conexao = conectar_banco()

@@ -143,16 +143,14 @@ function salvarJogo() {
     const nome =
         document.getElementById("nome").value.trim();
 
-    const email =
-    document.getElementById("email").value.trim();
+    const email = "teste@gmail.com";
 
-    if (!email.includes("@") || !email.split("@")[1]?.includes(".")) {
-
-        alert("E-mail inválido.");
-
+    if (!nome) {
+        alert("Digite seu nome.");
         return;
-
     }
+
+    // resto da função continua aqui...
 
     const selecionados =
         document.querySelectorAll(".numero.selecionado");
@@ -220,63 +218,58 @@ function salvarJogo() {
     // ENVIA PARA O FLASK
     // =================================
 
-    fetch("/salvar-jogo", {
+   fetch("/salvar-jogo", {
 
-        method: "POST",
+            method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        body: JSON.stringify({
+            body: JSON.stringify({
 
-            nome: nome,
+                nome: nome,
 
-            email: email,
+                email: email,
 
-            numeros: numeros
+                numeros: numeros
+
+            })
 
         })
 
-    })
+        .then(resposta => resposta.json())
 
-    .then(resposta => resposta.json())
+        .then(dados => {
 
-    .then(dados => {
+            alert(dados.mensagem);
 
-        alert(dados.mensagem);
+            if (dados.sucesso) {
 
-        if (dados.sucesso) {
+                // Limpa nome
+                document.getElementById("nome").value = "";
 
-            // Limpa nome
-            document.getElementById("nome").value = "";
+                // Remove todos os números selecionados
+                document.querySelectorAll(".numero.selecionado")
+                    .forEach(numero => {
+                        numero.classList.remove("selecionado");
+                    });
 
-            // Limpa email
-            document.getElementById("email").value = "";
+                // Atualiza a mensagem da tela
+                atualizarMensagem();
+            }
 
-            // Remove todos os números selecionados
-            document.querySelectorAll(".numero.selecionado")
-                .forEach(numero => {
-                    numero.classList.remove("selecionado");
-                });
+        })
 
-            // Atualiza a mensagem da tela
-            atualizarMensagem();
-        }
+        .catch(erro => {
 
-    })
+            console.error(erro);
 
-    .catch(erro => {
+            alert("Erro ao salvar o jogo.");
 
-        console.error(erro);
+        });
 
-        alert("Erro ao salvar o jogo.");
-
-    });
-
-}
-
-
+    }
 // =====================================
 // INICIAR
 // =====================================
