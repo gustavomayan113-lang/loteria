@@ -91,6 +91,40 @@ def salvar_jogo():
     numeros = dados.get("numeros")
 
 
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT data_limite
+        FROM configuracoes
+        WHERE id = 1
+    """)
+
+    resultado = cursor.fetchone()
+
+    conexao.close()
+
+    if resultado:
+
+        data_limite = datetime.strptime(
+            resultado[0],
+            "%d/%m/%Y"
+        )
+
+        data_limite = data_limite.replace(
+            hour=23,
+            minute=59,
+            second=59
+        )
+
+        if datetime.now() > data_limite:
+
+            return jsonify({
+                "sucesso": False,
+                "mensagem": "O prazo para envio dos jogos já foi encerrado."
+            }), 403
+
+
 
 
     # Validação

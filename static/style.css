@@ -5,15 +5,14 @@
 }
 
 :root{
-    --verde-principal:#075c32;
-    --verde-escuro:#063d25;
-    --verde-profundo:#021f13;
-    --dourado:#f4d56a;
-    --dourado-escuro:#c8a94b;
-    --texto:#eef1f0;
-    --texto-suave:#b9c5bf;
+    --verde-principal:#0d7a4d;
+    --verde-escuro:#0a5c3a;
+    --verde-profundo:#052d1d;
+    --dourado:#f8e07b;
+    --dourado-escuro:#d4b74e;
+    --texto:#ffffff;
+    --texto-suave:#c8ddd3;
 }
-
 html{
     width:100%;
     overflow-x:hidden;
@@ -24,14 +23,14 @@ body{
     width:100%;
 
     background:
-        radial-gradient(
-            circle at top,
-            #08713c 0%,
-            #075c32 25%,
-            #063d25 55%,
-            #021f13 80%,
-            #000 100%
-        );
+    radial-gradient(
+        circle at top,
+        #14a05f 0%,
+        #0d7a4d 25%,
+        #0a5c3a 60%,
+        #052d1d 85%,
+        #02150d 100%
+    );
 
     color:var(--texto);
 
@@ -673,5 +672,119 @@ button.btn-limpar:hover{
 
     #mensagem{
         font-size:15px;
+    }
+}
+
+
+
+
+.painel{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    margin-bottom:20px;
+}
+
+.campo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+}
+
+.campo label{
+    min-width:80px;
+    text-align:left;
+    color:#d8ffe5;
+    font-weight:700;
+    font-size:15px;
+}
+
+.campo input{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+
+    background:#0f3f2d;
+    color:white;
+
+    border:1px solid #2db66f;
+    outline:none;
+}
+
+.campo input:focus{
+    border-color:#6dffaf;
+    box-shadow:0 0 10px rgba(109,255,175,.25);
+}
+
+.botoes{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.botoes a{
+    text-decoration:none;
+}
+
+.botoes button{
+    min-width:170px;
+
+    padding:14px 18px;
+
+    border:none;
+    border-radius:10px;
+
+    background:linear-gradient(
+        180deg,
+        #35c977,
+        #168a4d
+    );
+
+    color:white;
+    font-weight:700;
+    font-size:14px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.botoes button:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.08);
+}
+
+.botoes button:active{
+    transform:translateY(0);
+}
+
+
+
+@media(max-width:600px){
+
+    .campo{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .campo label{
+        min-width:auto;
+    }
+
+    .campo input{
+        width:100%;
+    }
+
+    .botoes{
+        flex-direction:column;
+    }
+
+    .botoes button{
+        width:100%;
+        min-width:unset;
     }
 }

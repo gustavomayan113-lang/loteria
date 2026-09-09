@@ -24,23 +24,31 @@
         </div>
         <div class="painel">
 
-            <input type="text" id="nome" placeholder="Digite seu nome">
+            <div class="campo">
+                <label>Nome</label>
+                <input type="text" id="nome" placeholder="Digite seu nome">
+            </div>
 
-            <input type="text" id="email" placeholder="DIgite seu E-mail">
+            <div class="campo">
+                <label>E-mail</label>
+                <input type="text" id="email" placeholder="Digite seu e-mail">
+            </div>
 
-            <button onclick="gerarAleatorio()">GERAR JOGO ALEATÓRIO</button>
-            
-            <button onclick="limparJogo()" class="btn-limpar">
-                LIMPAR JOGO
-            </button>
+            <div class="botoes">
+                <button onclick="limparJogo()">
+                    LIMPAR JOGO
+                </button>
 
-            <button onclick="salvarJogo()">
-                SALVAR JOGO
-            </button>
+                <button onclick="salvarJogo()">
+                    SALVAR JOGO
+                </button>
 
-            <a href="/login">
-                <button>Ver Banco de Dados</button>
-            </a>
+                <a href="/login">
+                    <button type="button">
+                        VER BANCO
+                    </button>
+                </a>
+            </div>
 
         </div>
 
