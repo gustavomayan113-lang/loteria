@@ -1,0 +1,5 @@
+.env
+__pycache__/
+*.pyc
+loteria.db
+jogos_loteria_nior.xlsx

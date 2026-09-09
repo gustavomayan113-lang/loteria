@@ -1,19 +1,26 @@
-import sqlite3
+import os
+import psycopg
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def conectar_banco():
-    return sqlite3.connect("loteria.db")
+    return psycopg.connect(DATABASE_URL)
 
 
 def criar_banco():
 
-    conexao = sqlite3.connect("loteria.db")
+    conexao = conectar_banco()
     cursor = conexao.cursor()
 
-    # Cria a tabela caso ela ainda não exista
+    # Cria a tabela caso ainda não exista
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS jogos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             nome TEXT NOT NULL,
             email TEXT,
             numeros TEXT NOT NULL,
@@ -23,32 +30,7 @@ def criar_banco():
         )
     """)
 
-    # Verifica quais colunas já existem
-    cursor.execute("PRAGMA table_info(jogos)")
-
-    colunas = [coluna[1] for coluna in cursor.fetchall()]
-
-    # Se o banco antigo não tiver email, adiciona
-    if "email" not in colunas:
-
-        cursor.execute("""
-            ALTER TABLE jogos
-            ADD COLUMN email TEXT
-        """)
-
-        print("Coluna 'email' adicionada ao banco.")
-
-    # Se por algum motivo o banco antigo não tiver modo
-    if "modo" not in colunas:
-
-        cursor.execute("""
-            ALTER TABLE jogos
-            ADD COLUMN modo TEXT
-        """)
-
-        print("Coluna 'modo' adicionada ao banco.")
-
-
+    # Cria a tabela de configurações caso ainda não exista
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS configuracoes (
             id INTEGER PRIMARY KEY,
@@ -56,15 +38,21 @@ def criar_banco():
         )
     """)
 
-    cursor.execute("SELECT * FROM configuracoes WHERE id = 1")
+    # Verifica se já existe a configuração principal
+    cursor.execute("""
+        SELECT * FROM configuracoes
+        WHERE id = 1
+    """)
 
     if not cursor.fetchone():
+
         cursor.execute("""
             INSERT INTO configuracoes (id, data_limite)
             VALUES (1, '31/12/2026')
         """)
 
     conexao.commit()
+    cursor.close()
     conexao.close()
 
 
@@ -72,4 +60,4 @@ if __name__ == "__main__":
 
     criar_banco()
 
-    print("Banco criado/atualizado com sucesso!")
+    print("Banco Supabase criado/atualizado com sucesso!")

@@ -8,10 +8,15 @@ from flask import (
     send_file
 )
 
+import os
 import json
 from datetime import datetime
 
+from dotenv import load_dotenv
+
 from banco import conectar_banco, criar_banco
+
+load_dotenv()
 
 
 app = Flask(__name__)
@@ -20,10 +25,10 @@ app = Flask(__name__)
 # CONFIGURAÇÕES DO ADMINISTRADOR
 # =====================================
 
-app.secret_key = "loteria_nior_admin"
+app.secret_key = os.getenv("SECRET_KEY")
 
-LOGIN_ADMIN = "ADm778"
-SENHA_ADMIN = "Loto_ria"
+LOGIN_ADMIN = os.getenv("LOGIN_ADMIN")
+SENHA_ADMIN = os.getenv("SENHA_ADMIN")
 
 
 
@@ -41,7 +46,6 @@ def limpar_banco():
     cursor = conexao.cursor()
 
     cursor.execute("DELETE FROM jogos")
-    cursor.execute("DELETE FROM sqlite_sequence WHERE name='jogos'")
 
     conexao.commit()
     conexao.close()
@@ -166,7 +170,7 @@ def salvar_jogo():
             modo,
             data
         )
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """, (
         nome,
         email,
@@ -293,7 +297,7 @@ def alterar_data():
 
     cursor.execute("""
         UPDATE configuracoes
-        SET data_limite = ?
+        SET data_limite = %s
         WHERE id = 1
     """, (data,))
 
