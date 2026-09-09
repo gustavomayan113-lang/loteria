@@ -199,7 +199,6 @@ function salvarJogo() {
     const confirmar = confirm(
         `CONFIRMAR JOGO?\n\n` +
         `Nome: ${nome}\n` +
-        `E-mail: ${email}\n\n` +
         `Números escolhidos:\n` +
         `${numeros.join(" - ")}\n\n` +
         `Deseja salvar este jogo?`
