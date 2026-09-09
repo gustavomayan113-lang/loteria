@@ -25,7 +25,7 @@
         <div class="painel">
 
             <div class="campo">
-                <label>Nome</label>
+                <label>Nome:</label>
                 <input type="text" id="nome" placeholder="Digite seu nome">
             </div>
 
@@ -34,7 +34,7 @@
                 <input type="text" id="email" placeholder="Digite seu e-mail"> -->
             </div>
 
-            <div class="botoes">
+            <!-- <div class="botoes">
                 <button onclick="limparJogo()">
                     LIMPAR JOGO
                 </button>
@@ -48,9 +48,10 @@
                         VER BANCO
                     </button>
                 </a>
-            </div>
+            </div> -->
 
-        </div>
+        <!-- </div> -->
+
 
         <div class="prazo-jogos">
             🟢 Aceitando jogos até {{ data_limite }}
@@ -60,7 +61,23 @@
 
         <div id="tabela" class="tabela"></div>
 
+        <div class="botoes">
+                <button id="cinza1" onclick="limparJogo()">
+                    LIMPAR JOGO
+                </button>
 
+                <button onclick="salvarJogo()">
+                    SALVAR JOGO
+                </button>
+
+                <a href="/login">
+                    <button id="cinza2" type="button">
+                        ADM
+                    </button>
+                </a>
+            </div>
+
+        </div>
 
     </div>
 
