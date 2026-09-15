@@ -92,6 +92,76 @@
 
 </div>
 
+        <div class="configuracao-prazo">
+
+            <div class="configuracao-titulo">
+                <span>🎯</span>
+                <div>
+                    <h2>Configuração do jogo</h2>
+                    <p>Defina a tabela, o limite de números e a exibição da seleção.</p>
+                </div>
+            </div>
+
+            <form action="/alterar-configuracao-jogo" method="POST" class="form-configuracao">
+
+                <div class="campo-grid">
+                    <div class="campo-data">
+                        <label for="total_numeros">
+                            Quantidade de números na tabela
+                        </label>
+                        <input
+                            type="number"
+                            id="total_numeros"
+                            name="total_numeros"
+                            min="1"
+                            max="100"
+                            value="{{ configuracao.total_numeros }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo-data">
+                        <label for="quantidade_padrao">
+                            Quantidade padrão de números
+                        </label>
+                        <input
+                            type="number"
+                            id="quantidade_padrao"
+                            name="quantidade_padrao"
+                            min="1"
+                            max="100"
+                            value="{{ configuracao.quantidade_padrao }}"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="opcoes-configuracao">
+                    <label class="checkbox-item">
+                        <input
+                            type="checkbox"
+                            name="gerar_aleatorio"
+                            {% if configuracao.gerar_aleatorio %}checked{% endif %}
+                        >
+                        Permitir geração de jogo aleatório
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input
+                            type="checkbox"
+                            name="mostrar_seletor_quantidade"
+                            {% if configuracao.mostrar_seletor_quantidade %}checked{% endif %}
+                        >
+                        Exibir seleção de quantidade na tela inicial
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-salvar-data">
+                    SALVAR CONFIGURAÇÃO
+                </button>
+            </form>
+        </div>
+
 
         <div class="tabela-wrapper">
 

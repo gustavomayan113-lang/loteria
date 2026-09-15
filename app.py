@@ -21,6 +21,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
+criar_banco()
+
 # =====================================
 # CONFIGURAÇÕES DO ADMINISTRADOR
 # =====================================
@@ -29,6 +31,115 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 LOGIN_ADMIN = os.getenv("LOGIN_ADMIN")
 SENHA_ADMIN = os.getenv("SENHA_ADMIN")
+
+
+# =====================================
+# CONFIGURAÇÃO DO JOGO
+# =====================================
+
+
+def obter_configuracao_jogo():
+
+    configuracao_padrao = {
+        "data_limite": "31/12/2026",
+        "total_numeros": 25,
+        "quantidade_padrao": 25,
+        "mostrar_seletor_quantidade": False,
+        "gerar_aleatorio": True,
+    }
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT
+            data_limite,
+            total_numeros,
+            quantidade_padrao,
+            mostrar_seletor_quantidade,
+            gerar_aleatorio
+        FROM configuracoes
+        WHERE id = 1
+    """)
+
+    resultado = cursor.fetchone()
+    conexao.close()
+
+    if not resultado:
+        return configuracao_padrao
+
+    data_limite, total_numeros, quantidade_padrao, mostrar_seletor_quantidade, gerar_aleatorio = resultado
+
+    try:
+        total_numeros = int(total_numeros)
+    except (TypeError, ValueError):
+        total_numeros = configuracao_padrao["total_numeros"]
+
+    try:
+        quantidade_padrao = int(quantidade_padrao)
+    except (TypeError, ValueError):
+        quantidade_padrao = configuracao_padrao["quantidade_padrao"]
+
+    if total_numeros < 1:
+        total_numeros = configuracao_padrao["total_numeros"]
+
+    if quantidade_padrao < 1:
+        quantidade_padrao = min(configuracao_padrao["quantidade_padrao"], total_numeros)
+    else:
+        quantidade_padrao = min(quantidade_padrao, total_numeros)
+
+    mostrar_seletor_quantidade = bool(mostrar_seletor_quantidade)
+    gerar_aleatorio = bool(gerar_aleatorio)
+
+    return {
+        "data_limite": data_limite or configuracao_padrao["data_limite"],
+        "total_numeros": total_numeros,
+        "quantidade_padrao": quantidade_padrao,
+        "mostrar_seletor_quantidade": mostrar_seletor_quantidade,
+        "gerar_aleatorio": gerar_aleatorio,
+    }
+
+
+
+def normalizar_inteiro(valor, padrao):
+
+    try:
+        numero = int(valor)
+    except (TypeError, ValueError):
+        return padrao
+
+    if numero < 1:
+        return padrao
+
+    return numero
+
+
+
+def validacao_numeros(numeros, total_numeros, quantidade_esperada):
+
+    if not isinstance(numeros, list):
+        return False, "Lista de números inválida."
+
+    if len(numeros) != quantidade_esperada:
+        return False, f"Você precisa escolher exatamente {quantidade_esperada} números."
+
+    numeros_convertidos = []
+
+    for numero in numeros:
+        try:
+            numero_int = int(numero)
+        except (TypeError, ValueError):
+            return False, "Você só pode escolher números válidos."
+
+        if numero_int < 1 or numero_int > total_numeros:
+            return False, f"Os números devem estar entre 1 e {total_numeros}."
+
+        numeros_convertidos.append(numero_int)
+
+    if len(set(numeros_convertidos)) != len(numeros_convertidos):
+        return False, "Não é permitido repetir números."
+
+    return True, numeros_convertidos
 
 
 
@@ -60,24 +171,12 @@ def limpar_banco():
 @app.route("/")
 def inicio():
 
-    conexao = conectar_banco()
-    cursor = conexao.cursor()
-
-    cursor.execute("""
-        SELECT data_limite
-        FROM configuracoes
-        WHERE id = 1
-    """)
-
-    resultado = cursor.fetchone()
-
-    data_limite = resultado[0]
-
-    conexao.close()
+    configuracao = obter_configuracao_jogo()
 
     return render_template(
         "index.html",
-        data_limite=data_limite
+        data_limite=configuracao["data_limite"],
+        configuracao=configuracao
     )
 
 
@@ -88,12 +187,15 @@ def inicio():
 @app.route("/salvar-jogo", methods=["POST"])
 def salvar_jogo():
 
-    dados = request.get_json()
+    dados = request.get_json(silent=True) or {}
 
-    nome = dados.get("nome")
+    nome = (dados.get("nome") or "").strip()
     email = "teste@gmail.com"
-    numeros = dados.get("numeros")
+    numeros = dados.get("numeros") or []
+    quantidade = dados.get("quantidade")
+    modo = (dados.get("modo") or "manual").strip() or "manual"
 
+    configuracao = obter_configuracao_jogo()
 
     conexao = conectar_banco()
     cursor = conexao.cursor()
@@ -105,10 +207,9 @@ def salvar_jogo():
     """)
 
     resultado = cursor.fetchone()
-
     conexao.close()
 
-    if resultado:
+    if resultado and resultado[0]:
 
         data_limite = datetime.strptime(
             resultado[0],
@@ -128,10 +229,6 @@ def salvar_jogo():
                 "mensagem": "O prazo para envio dos jogos já foi encerrado."
             }), 403
 
-
-
-
-    # Validação
     if not nome or not numeros:
 
         return jsonify({
@@ -139,20 +236,33 @@ def salvar_jogo():
             "mensagem": "Nome e números são obrigatórios."
         }), 400
 
-    # Sempre serão exatamente 15 números
-    if len(numeros) != 15:
+    quantidade_esperada = normalizar_inteiro(
+        quantidade,
+        configuracao["quantidade_padrao"]
+    )
 
+    total_numeros = configuracao["total_numeros"]
+
+    if quantidade_esperada > total_numeros:
+        quantidade_esperada = total_numeros
+
+    valido, resultado_validacao = validacao_numeros(
+        numeros,
+        total_numeros,
+        quantidade_esperada
+    )
+
+    if not valido:
         return jsonify({
             "sucesso": False,
-            "mensagem": "O jogo precisa ter exatamente 15 números."
+            "mensagem": resultado_validacao
         }), 400
 
-
+    numeros_normalizados = resultado_validacao
 
     # Conecta ao banco
     conexao = conectar_banco()
     cursor = conexao.cursor()
-
 
     # Salva o jogo
     cursor.execute("""
@@ -168,16 +278,14 @@ def salvar_jogo():
     """, (
         nome,
         email,
-        json.dumps(numeros),
-        15,
-        "manual",
+        json.dumps(numeros_normalizados),
+        quantidade_esperada,
+        modo,
         datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     ))
 
-
     conexao.commit()
     conexao.close()
-
 
     return jsonify({
         "sucesso": True,
@@ -226,10 +334,10 @@ def banco():
 
         return redirect("/login")
 
+    configuracao = obter_configuracao_jogo()
 
     conexao = conectar_banco()
     cursor = conexao.cursor()
-
 
     cursor.execute("""
         SELECT
@@ -243,15 +351,14 @@ def banco():
         ORDER BY id DESC
     """)
 
-
     jogos = cursor.fetchall()
 
     conexao.close()
 
-
     return render_template(
         "banco.html",
-        jogos=jogos
+        jogos=jogos,
+        configuracao=configuracao
     )
 
 
@@ -281,6 +388,9 @@ def alterar_data():
 
     data = request.form.get("data_limite")
 
+    if not data:
+        return redirect("/banco")
+
     data = datetime.strptime(
         data,
         "%Y-%m-%d"
@@ -294,6 +404,52 @@ def alterar_data():
         SET data_limite = %s
         WHERE id = 1
     """, (data,))
+
+    conexao.commit()
+    conexao.close()
+
+    return redirect("/banco")
+
+
+@app.route("/alterar-configuracao-jogo", methods=["POST"])
+def alterar_configuracao_jogo():
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    total_numeros = normalizar_inteiro(
+        request.form.get("total_numeros"),
+        25
+    )
+    quantidade_padrao = normalizar_inteiro(
+        request.form.get("quantidade_padrao"),
+        25
+    )
+    mostrar_seletor_quantidade = request.form.get("mostrar_seletor_quantidade") == "on"
+    gerar_aleatorio = request.form.get("gerar_aleatorio") == "on"
+
+    if quantidade_padrao > total_numeros:
+        quantidade_padrao = total_numeros
+
+    if total_numeros < 1:
+        total_numeros = 25
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE configuracoes
+        SET total_numeros = %s,
+            quantidade_padrao = %s,
+            mostrar_seletor_quantidade = %s,
+            gerar_aleatorio = %s
+        WHERE id = 1
+    """, (
+        total_numeros,
+        quantidade_padrao,
+        mostrar_seletor_quantidade,
+        gerar_aleatorio,
+    ))
 
     conexao.commit()
     conexao.close()

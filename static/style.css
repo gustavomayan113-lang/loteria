@@ -422,6 +422,33 @@ button.btn-limpar:hover{
     line-height:1.4;
 }
 
+.controle-quantidade{
+    width:100%;
+    max-width:520px;
+    margin:0 auto 18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:12px 16px;
+    background:rgba(244,213,106,0.05);
+    border:1px solid rgba(244,213,106,0.2);
+    border-radius:10px;
+    color:#dfe9e3;
+    font-weight:700;
+}
+
+.controle-quantidade select{
+    min-width:110px;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #2db66f;
+    background:#0f3f2d;
+    color:#fff;
+    font-size:14px;
+}
+
 .tabela{
     width:100%;
     max-width:600px;
@@ -795,8 +822,10 @@ button.btn-limpar:hover{
 } */
 #cinza2{
     background: rgb(131, 131, 156);
-   
     
-    
+}
 
+#gerar-aleatorio{
+    background: linear-gradient(180deg, #f7df79, #d9b94f);
+    color: #183522;
 }

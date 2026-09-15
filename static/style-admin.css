@@ -477,6 +477,39 @@ tbody tr:nth-child(even) {
     box-shadow:0 0 0 2px rgba(201,162,39,.12);
 }
 
+.form-configuracao{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.campo-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+}
+
+.opcoes-configuracao{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px 24px;
+}
+
+.checkbox-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#dfe8e5;
+    font-size:14px;
+    font-weight:600;
+}
+
+.checkbox-item input{
+    width:18px;
+    height:18px;
+    accent-color:#c9a227;
+}
+
 .btn-salvar-data{
     padding:11px 20px;
 
@@ -501,9 +534,14 @@ tbody tr:nth-child(even) {
 
 @media(max-width:600px){
 
-    .form-data{
+    .form-data,
+    .form-configuracao{
         flex-direction:column;
         align-items:stretch;
+    }
+
+    .campo-grid{
+        grid-template-columns:1fr;
     }
 
     .campo-data input{

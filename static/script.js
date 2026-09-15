@@ -1,6 +1,68 @@
-const TOTAL_NUMEROS = 25;
-const NUMEROS_ESCOLHER = 15;
+const CONFIGURACAO_PADRAO = {
+    total_numeros: 25,
+    quantidade_padrao: 25,
+    mostrar_seletor_quantidade: false,
+    gerar_aleatorio: true,
+};
 
+const CONFIGURACAO_JOGO = window.CONFIGURACAO_JOGO || CONFIGURACAO_PADRAO;
+let TOTAL_NUMEROS = Number(CONFIGURACAO_JOGO.total_numeros) || CONFIGURACAO_PADRAO.total_numeros;
+let NUMEROS_ESCOLHER = Number(CONFIGURACAO_JOGO.quantidade_padrao) || CONFIGURACAO_PADRAO.quantidade_padrao;
+let MODO_JOGO = "manual";
+
+if (NUMEROS_ESCOLHER > TOTAL_NUMEROS) {
+    NUMEROS_ESCOLHER = TOTAL_NUMEROS;
+}
+
+function atualizarValorPadrao() {
+    const valorPadrao = Number(CONFIGURACAO_JOGO.quantidade_padrao) || CONFIGURACAO_PADRAO.quantidade_padrao;
+    NUMEROS_ESCOLHER = Math.min(Math.max(valorPadrao, 1), TOTAL_NUMEROS);
+}
+
+function criarListaQuantidade() {
+    const seletor = document.getElementById("quantidade-jogo");
+
+    if (!seletor) {
+        return;
+    }
+
+    const valorAtual = Number(seletor.value) || NUMEROS_ESCOLHER || 1;
+    seletor.innerHTML = "";
+
+    for (let i = 1; i <= TOTAL_NUMEROS; i++) {
+        const option = document.createElement("option");
+        option.value = String(i);
+        option.textContent = `${i} números`;
+        seletor.appendChild(option);
+    }
+
+    const valorSelecionado = Math.min(Math.max(valorAtual, 1), TOTAL_NUMEROS);
+    seletor.value = String(valorSelecionado);
+    NUMEROS_ESCOLHER = valorSelecionado;
+}
+
+function configurarSeletorQuantidade() {
+    const container = document.getElementById("controle-quantidade");
+
+    if (!container) {
+        return;
+    }
+
+    if (CONFIGURACAO_JOGO.mostrar_seletor_quantidade) {
+        container.style.display = "flex";
+        criarListaQuantidade();
+        return;
+    }
+
+    container.style.display = "none";
+    atualizarValorPadrao();
+}
+
+function limparSelecionados() {
+    document.querySelectorAll(".numero.selecionado").forEach(numero => {
+        numero.classList.remove("selecionado");
+    });
+}
 
 // =====================================
 // CRIAR TABELA
@@ -9,6 +71,10 @@ const NUMEROS_ESCOLHER = 15;
 function criarTabela() {
 
     const tabela = document.getElementById("tabela");
+
+    if (!tabela) {
+        return;
+    }
 
     tabela.innerHTML = "";
 
@@ -36,7 +102,7 @@ function criarTabela() {
 
             if (selecionados >= NUMEROS_ESCOLHER) {
 
-                alert("Você só pode escolher 15 números.");
+                alert(`Você só pode escolher ${NUMEROS_ESCOLHER} números.`);
 
                 return;
             }
@@ -58,12 +124,12 @@ function criarTabela() {
 
 function gerarAleatorio() {
 
-    // Garante que a tabela existe
+    MODO_JOGO = "aleatorio";
+
     criarTabela();
 
     const numeros = [];
 
-    // Sorteia 15 números diferentes
     while (numeros.length < NUMEROS_ESCOLHER) {
 
         const numero =
@@ -75,7 +141,6 @@ function gerarAleatorio() {
         }
     }
 
-    // Seleciona os números sorteados
     const elementos =
         document.querySelectorAll(".numero");
 
@@ -111,9 +176,13 @@ function atualizarMensagem() {
     const mensagem =
         document.getElementById("mensagem");
 
+    if (!mensagem) {
+        return;
+    }
+
     if (numeros.length === 0) {
 
-        mensagem.innerHTML = "Escolha seus 15 números";
+        mensagem.innerHTML = `Escolha seus ${NUMEROS_ESCOLHER} números`;
 
         return;
     }
@@ -121,10 +190,10 @@ function atualizarMensagem() {
     const nome =
         document.getElementById("nome").value.trim();
 
-    if (numeros.length < 15) {
+    if (numeros.length < NUMEROS_ESCOLHER) {
 
         mensagem.innerHTML =
-            `${nome ? nome + ", " : ""}você escolheu ${numeros.length} de 15 números`;
+            `${nome ? nome + ", " : ""}você escolheu ${numeros.length} de ${NUMEROS_ESCOLHER} números`;
 
         return;
     }
@@ -150,8 +219,6 @@ function salvarJogo() {
         return;
     }
 
-    // resto da função continua aqui...
-
     const selecionados =
         document.querySelectorAll(".numero.selecionado");
 
@@ -165,18 +232,6 @@ function salvarJogo() {
 
     numeros.sort((a, b) => a - b);
 
-
-    // =================================
-    // VALIDAÇÕES
-    // =================================
-
-    if (!nome) {
-
-        alert("Digite seu nome.");
-
-        return;
-    }
-
     if (!email) {
 
         alert("Digite seu e-mail.");
@@ -184,17 +239,12 @@ function salvarJogo() {
         return;
     }
 
-    if (numeros.length !== 15) {
+    if (numeros.length !== NUMEROS_ESCOLHER) {
 
-        alert("Você precisa escolher exatamente 15 números.");
+        alert(`Você precisa escolher exatamente ${NUMEROS_ESCOLHER} números.`);
 
         return;
     }
-
-
-    // =================================
-    // CONFIRMAÇÃO
-    // =================================
 
     const confirmar = confirm(
         `CONFIRMAR JOGO?\n\n` +
@@ -204,20 +254,11 @@ function salvarJogo() {
         `Deseja salvar este jogo?`
     );
 
-
-    // Se clicar em cancelar
     if (!confirmar) {
-
         return;
-
     }
 
-
-    // =================================
-    // ENVIA PARA O FLASK
-    // =================================
-
-   fetch("/salvar-jogo", {
+    fetch("/salvar-jogo", {
 
             method: "POST",
 
@@ -226,13 +267,11 @@ function salvarJogo() {
             },
 
             body: JSON.stringify({
-
                 nome: nome,
-
                 email: email,
-
-                numeros: numeros
-
+                numeros: numeros,
+                quantidade: NUMEROS_ESCOLHER,
+                modo: MODO_JOGO
             })
 
         })
@@ -245,16 +284,9 @@ function salvarJogo() {
 
             if (dados.sucesso) {
 
-                // Limpa nome
                 document.getElementById("nome").value = "";
-
-                // Remove todos os números selecionados
-                document.querySelectorAll(".numero.selecionado")
-                    .forEach(numero => {
-                        numero.classList.remove("selecionado");
-                    });
-
-                // Atualiza a mensagem da tela
+                limparSelecionados();
+                MODO_JOGO = "manual";
                 atualizarMensagem();
             }
 
@@ -275,8 +307,25 @@ function salvarJogo() {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    criarTabela();
+    const seletor = document.getElementById("quantidade-jogo");
+    if (seletor) {
+        seletor.addEventListener("change", function () {
+            const valor = Number(this.value) || NUMEROS_ESCOLHER;
+            NUMEROS_ESCOLHER = Math.min(Math.max(valor, 1), TOTAL_NUMEROS);
+            limparSelecionados();
+            atualizarMensagem();
+        });
+    }
 
+    const botaoAleatorio = document.getElementById("gerar-aleatorio");
+    if (botaoAleatorio) {
+        if (!CONFIGURACAO_JOGO.gerar_aleatorio) {
+            botaoAleatorio.style.display = "none";
+        }
+    }
+
+    configurarSeletorQuantidade();
+    criarTabela();
     atualizarMensagem();
 
 });
@@ -288,15 +337,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function limparJogo() {
 
-    const selecionados =
-        document.querySelectorAll(".numero.selecionado");
-
-    selecionados.forEach(numero => {
-
-        numero.classList.remove("selecionado");
-
-    });
-
+    limparSelecionados();
     atualizarMensagem();
-
 }

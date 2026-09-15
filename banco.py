@@ -34,9 +34,39 @@ def criar_banco():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS configuracoes (
             id INTEGER PRIMARY KEY,
-            data_limite TEXT
+            data_limite TEXT,
+            total_numeros INTEGER NOT NULL DEFAULT 25,
+            quantidade_padrao INTEGER NOT NULL DEFAULT 25,
+            mostrar_seletor_quantidade BOOLEAN NOT NULL DEFAULT FALSE,
+            gerar_aleatorio BOOLEAN NOT NULL DEFAULT TRUE
         )
     """)
+
+    colunas = {
+        "total_numeros": "INTEGER NOT NULL DEFAULT 25",
+        "quantidade_padrao": "INTEGER NOT NULL DEFAULT 25",
+        "mostrar_seletor_quantidade": "BOOLEAN NOT NULL DEFAULT FALSE",
+        "gerar_aleatorio": "BOOLEAN NOT NULL DEFAULT TRUE",
+    }
+
+    for nome_coluna, tipo_coluna in colunas.items():
+        cursor.execute(
+            """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM information_schema.columns
+                    WHERE table_schema = current_schema()
+                    AND table_name = 'configuracoes'
+                    AND column_name = %s
+                )
+            """,
+            (nome_coluna,),
+        )
+
+        if not cursor.fetchone()[0]:
+            cursor.execute(
+                f"ALTER TABLE configuracoes ADD COLUMN {nome_coluna} {tipo_coluna}"
+            )
 
     # Verifica se já existe a configuração principal
     cursor.execute("""
@@ -47,8 +77,25 @@ def criar_banco():
     if not cursor.fetchone():
 
         cursor.execute("""
-            INSERT INTO configuracoes (id, data_limite)
-            VALUES (1, '31/12/2026')
+            INSERT INTO configuracoes (
+                id,
+                data_limite,
+                total_numeros,
+                quantidade_padrao,
+                mostrar_seletor_quantidade,
+                gerar_aleatorio
+            )
+            VALUES (1, '31/12/2026', 25, 25, FALSE, TRUE)
+        """)
+    else:
+        cursor.execute("""
+            UPDATE configuracoes
+            SET data_limite = COALESCE(data_limite, '31/12/2026'),
+                total_numeros = COALESCE(total_numeros, 25),
+                quantidade_padrao = COALESCE(quantidade_padrao, 25),
+                mostrar_seletor_quantidade = COALESCE(mostrar_seletor_quantidade, FALSE),
+                gerar_aleatorio = COALESCE(gerar_aleatorio, TRUE)
+            WHERE id = 1
         """)
 
     conexao.commit()

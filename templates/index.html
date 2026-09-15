@@ -59,11 +59,20 @@
 
         <h2 id="mensagem"></h2>
 
+        <div id="controle-quantidade" class="controle-quantidade" style="display: none;">
+            <label for="quantidade-jogo">Quantos números deseja na tabela?</label>
+            <select id="quantidade-jogo" name="quantidade-jogo"></select>
+        </div>
+
         <div id="tabela" class="tabela"></div>
 
         <div class="botoes">
                 <button id="cinza1" onclick="limparJogo()">
                     LIMPAR JOGO
+                </button>
+
+                <button id="gerar-aleatorio" type="button" onclick="gerarAleatorio()">
+                    GERAR JOGO ALEATÓRIO
                 </button>
 
                 <button onclick="salvarJogo()">
@@ -81,6 +90,9 @@
 
     </div>
 
+   <script>
+       window.CONFIGURACAO_JOGO = {{ configuracao | default({}) | tojson }};
+   </script>
    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
