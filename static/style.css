@@ -829,3 +829,467 @@ button.btn-limpar:hover{
     background: linear-gradient(180deg, #f7df79, #d9b94f);
     color: #183522;
 }
+
+
+/* =====================================================
+   TEMAS DAS LOTERIAS (definidos pelo admin)
+   ===================================================== */
+
+/* -----------------------------------------------------
+   MEGA-SENA (azul e preto)
+----------------------------------------------------- */
+
+body.tema-mega-sena{
+    background:
+        radial-gradient(
+            circle at top,
+            #10233f 0%,
+            #0c1a30 30%,
+            #060d1a 65%,
+            #000000 100%
+        );
+}
+
+body.tema-mega-sena .container{
+    background:
+        linear-gradient(
+            145deg,
+            #0b1c33,
+            #05101f
+        );
+
+    border:1px solid #2c6fd1;
+
+    box-shadow:0 15px 40px rgba(44,111,209,.35);
+}
+
+body.tema-mega-sena .prazo-jogos{
+    background:rgba(60,140,255,.08);
+    border:1px solid rgba(60,140,255,.3);
+    color:#a9cfff;
+}
+
+body.tema-mega-sena #mensagem{
+    color:#7fb2ff;
+}
+
+body.tema-mega-sena .numero{
+    background:
+        linear-gradient(
+            145deg,
+            #0d1f38,
+            #050c18
+        );
+
+    border:1px solid #24406b;
+
+    color:#9dc2ff;
+}
+
+body.tema-mega-sena .numero:hover{
+    border-color:#4d9dff;
+    color:#e5f1ff;
+}
+
+body.tema-mega-sena .numero.selecionado{
+    background:
+        linear-gradient(
+            180deg,
+            #4d9dff 0%,
+            #2c6fd1 50%,
+            #14346b 100%
+        );
+
+    color:#eef6ff;
+    border-color:#8fc1ff;
+
+    box-shadow:0 0 15px rgba(77,157,255,.55);
+}
+
+body.tema-mega-sena button{
+    border-color:#4d9dff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4d9dff,
+            #2c6fd1
+        );
+
+    color:#eef6ff;
+}
+
+body.tema-mega-sena #gerar-aleatorio{
+    background:linear-gradient(180deg, #7fb2ff, #2c6fd1);
+    color:#04101f;
+}
+
+.logo-mega{
+    width:100%;
+    max-width:500px;
+
+    margin:0 auto 35px;
+
+    text-align:center;
+}
+
+.logo-titulo-mega{
+    font-size:clamp(40px, 10vw, 72px);
+
+    font-weight:900;
+    font-style:italic;
+
+    letter-spacing:-3px;
+
+    color:#4d9dff;
+
+    text-shadow:
+        3px 4px 0 #0c1a30,
+        6px 7px 0 rgba(0,0,0,.35);
+}
+
+.logo-titulo-mega .sena{
+    color:#eef6ff;
+}
+
+.faixa-mega{
+    margin-top:8px;
+
+    padding:8px 16px;
+
+    background:linear-gradient(90deg, #2c6fd1, #4d9dff, #2c6fd1);
+
+    color:#eef6ff;
+
+    font-weight:900;
+    font-size:clamp(14px, 3.5vw, 20px);
+
+    letter-spacing:1px;
+
+    border-radius:30px;
+}
+
+/* -----------------------------------------------------
+   MEGA-SENA DA VIRADA (preto e dourado premium)
+----------------------------------------------------- */
+
+body.tema-mega-virada{
+    background:
+        radial-gradient(
+            circle at top,
+            #221a00 0%,
+            #120d00 30%,
+            #060400 65%,
+            #000000 100%
+        );
+}
+
+body.tema-mega-virada .container{
+    background:
+        linear-gradient(
+            145deg,
+            #141414,
+            #000000
+        );
+
+    border:1px solid #d4af37;
+
+    box-shadow:0 15px 45px rgba(212,175,55,.45);
+}
+
+body.tema-mega-virada .prazo-jogos{
+    background:rgba(212,175,55,.1);
+    border:1px solid rgba(212,175,55,.35);
+    color:#f5d76e;
+}
+
+body.tema-mega-virada #mensagem{
+    color:#f5d76e;
+}
+
+body.tema-mega-virada .numero{
+    background:
+        linear-gradient(
+            145deg,
+            #1a1a1a,
+            #000000
+        );
+
+    border:1px solid #6b5a1e;
+
+    color:#d4af37;
+}
+
+body.tema-mega-virada .numero:hover{
+    border-color:#f5d76e;
+    color:#fff2c2;
+}
+
+body.tema-mega-virada .numero.selecionado{
+    background:
+        linear-gradient(
+            180deg,
+            #f5d76e 0%,
+            #d4af37 50%,
+            #8a6d1c 100%
+        );
+
+    color:#171200;
+    border-color:#fff2c2;
+
+    box-shadow:0 0 18px rgba(212,175,55,.7);
+}
+
+body.tema-mega-virada button{
+    border-color:#d4af37;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f5d76e,
+            #d4af37
+        );
+
+    color:#171200;
+}
+
+body.tema-mega-virada #gerar-aleatorio{
+    background:linear-gradient(180deg, #fff2c2, #d4af37);
+    color:#171200;
+}
+
+.logo-mega--virada .logo-titulo-mega{
+    color:#d4af37;
+
+    text-shadow:
+        3px 4px 0 #000,
+        6px 7px 0 rgba(212,175,55,.25);
+}
+
+.logo-mega--virada .logo-titulo-mega .sena{
+    color:#fff2c2;
+}
+
+.faixa-mega--virada{
+    background:linear-gradient(90deg, #8a6d1c, #d4af37, #8a6d1c);
+    color:#000;
+}
+
+/* -----------------------------------------------------
+   LOTOFÁCIL (verde e roxo, tema original)
+----------------------------------------------------- */
+
+body.tema-lotofacil{
+    --roxo-claro:#e9d5ff;
+    --roxo-medio:#c084fc;
+    --roxo-principal:#a855f7;
+    --roxo-escuro:#7c3aed;
+    --roxo-profundo:#4c1d95;
+    --roxo-fundo:#0b0514;
+}
+
+body.tema-lotofacil{
+    background:
+        radial-gradient(
+            circle at top,
+            #2a0a45 0%,
+            #1b0632 30%,
+            #12041f 65%,
+            #07010d 100%
+        );
+}
+
+body.tema-lotofacil .container{
+    background:
+        linear-gradient(
+            145deg,
+            #2a0a45,
+            #12041f
+        );
+
+    border:1px solid #a855f7;
+    box-shadow:0 15px 40px rgba(168,85,247,.35);
+}
+
+body.tema-lotofacil .logo-lotofacil::before{
+    background:#c084fc;
+}
+
+body.tema-lotofacil .logo-da{
+    background:#6d28d9;
+    box-shadow:
+        0 3px 0 #3b0a63,
+        0 5px 10px rgba(0,0,0,.25);
+}
+
+body.tema-lotofacil .campos input{
+    background:#1b0632;
+    border-color:#8b5cf6;
+    color:#fff;
+}
+
+body.tema-lotofacil .campos input::placeholder{
+    color:#c4b5fd;
+}
+
+body.tema-lotofacil .campos input:focus{
+    border-color:#d8b4fe;
+    box-shadow:0 0 0 2px rgba(216,180,254,.25);
+}
+
+body.tema-lotofacil button{
+    border-color:#c084fc;
+    background:
+        linear-gradient(
+            180deg,
+            #a855f7,
+            #6d28d9
+        );
+    color:#fff;
+}
+
+body.tema-lotofacil button.btn-limpar{
+    background:#4c1d95;
+    color:#e9d5ff;
+    border-color:#a855f7;
+}
+
+body.tema-lotofacil button.btn-limpar:hover{
+    background:#5b21b6;
+}
+
+body.tema-lotofacil .acesso-admin a{
+    color:#c4b5fd;
+}
+
+body.tema-lotofacil .acesso-admin a:hover{
+    color:#e9d5ff;
+}
+
+body.tema-lotofacil .prazo-jogos{
+    background:rgba(168,85,247,.1);
+    border:1px solid rgba(168,85,247,.35);
+    color:#e9d5ff;
+}
+
+body.tema-lotofacil .status-jogos{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    margin-right:6px;
+    border-radius:50%;
+    background:#a855f7;
+    box-shadow:0 0 8px rgba(168,85,247,.8);
+}
+
+body.tema-lotofacil #mensagem{
+    color:#e9d5ff;
+}
+
+body.tema-lotofacil .controle-quantidade{
+    background:rgba(168,85,247,.08);
+    border-color:rgba(168,85,247,.25);
+    color:#e9d5ff;
+}
+
+body.tema-lotofacil .controle-quantidade select{
+    border-color:#a855f7;
+    background:#2a0a45;
+    color:#fff;
+}
+
+body.tema-lotofacil .numero{
+    background:
+        linear-gradient(
+            145deg,
+            #1b0632,
+            #0b0514
+        );
+    border-color:#5b21b6;
+    color:#c4b5fd;
+    box-shadow:
+        inset 0 0 8px
+        rgba(168,85,247,.08);
+}
+
+body.tema-lotofacil .numero:hover{
+    border-color:#c084fc;
+    color:#f3e8ff;
+}
+
+body.tema-lotofacil .numero.selecionado{
+    background:
+        linear-gradient(
+            180deg,
+            #e9d5ff 0%,
+            #a855f7 50%,
+            #6d28d9 100%
+        );
+    color:#1b0632;
+    border-color:#d8b4fe;
+    box-shadow:0 0 15px rgba(168,85,247,.6);
+}
+
+body.tema-lotofacil .campo label{
+    color:#e9d5ff;
+}
+
+body.tema-lotofacil .campo input{
+    background:#2a0a45;
+    border-color:#8b5cf6;
+    color:#fff;
+}
+
+body.tema-lotofacil .campo input:focus{
+    border-color:#d8b4fe;
+    box-shadow:0 0 10px rgba(216,180,254,.25);
+}
+
+body.tema-lotofacil .botoes button{
+    background:
+        linear-gradient(
+            180deg,
+            #a855f7,
+            #6d28d9
+        );
+    color:#fff;
+}
+
+body.tema-lotofacil #cinza2{
+    background:#6d28d9;
+    color:#fff;
+}
+
+body.tema-lotofacil #gerar-aleatorio{
+    background:
+        linear-gradient(
+            180deg,
+            #c084fc,
+            #7c3aed
+        );
+    color:#fff;
+}
+
+/* -----------------------------------------------------
+   LOTOFÁCIL DA INDEPENDÊNCIA (verde e amarelo)
+----------------------------------------------------- */
+
+body.tema-lotofacil-independencia .numero.selecionado{
+    background:
+        linear-gradient(
+            180deg,
+            #2ec957 0%,
+            #1f9f3d 50%,
+            #0b4019 100%
+        );
+
+    color:#f4ffe8;
+    border-color:#7cf59a;
+
+    box-shadow:0 0 15px rgba(46,201,87,.55);
+}
+
+body.tema-lotofacil-independencia .numero:hover{
+    border-color:#2ec957;
+    color:#c7ffd6;
+}

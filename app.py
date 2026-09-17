@@ -34,6 +34,44 @@ SENHA_ADMIN = os.getenv("SENHA_ADMIN")
 
 
 # =====================================
+# TEMAS / LOTERIAS DISPONÍVEIS
+# =====================================
+
+TEMAS_LOTERIA = {
+    "mega-sena": {
+        "nome": "Mega-Sena",
+        "total_numeros": 60,
+        "quantidade_padrao": 6,
+        "classe_css": "tema-mega-sena",
+    },
+    "mega-sena-virada": {
+        "nome": "Mega-Sena da Virada",
+        "total_numeros": 60,
+        "quantidade_padrao": 6,
+        "classe_css": "tema-mega-virada",
+    },
+    "lotofacil": {
+        "nome": "Lotofácil",
+        "total_numeros": 25,
+        "quantidade_padrao": 15,
+        "classe_css": "tema-lotofacil",
+    },
+    "lotofacil-independencia": {
+        "nome": "Lotofácil da Independência",
+        "total_numeros": 25,
+        "quantidade_padrao": 15,
+        "classe_css": "tema-lotofacil-independencia",
+    },
+}
+
+TEMA_PADRAO = "lotofacil"
+
+
+def obter_tema(chave_tema):
+    return TEMAS_LOTERIA.get(chave_tema, TEMAS_LOTERIA[TEMA_PADRAO])
+
+
+# =====================================
 # CONFIGURAÇÃO DO JOGO
 # =====================================
 
@@ -46,6 +84,7 @@ def obter_configuracao_jogo():
         "quantidade_padrao": 25,
         "mostrar_seletor_quantidade": False,
         "gerar_aleatorio": True,
+        "tema": TEMA_PADRAO,
     }
 
     conexao = conectar_banco()
@@ -57,7 +96,8 @@ def obter_configuracao_jogo():
             total_numeros,
             quantidade_padrao,
             mostrar_seletor_quantidade,
-            gerar_aleatorio
+            gerar_aleatorio,
+            tema
         FROM configuracoes
         WHERE id = 1
     """)
@@ -68,7 +108,7 @@ def obter_configuracao_jogo():
     if not resultado:
         return configuracao_padrao
 
-    data_limite, total_numeros, quantidade_padrao, mostrar_seletor_quantidade, gerar_aleatorio = resultado
+    data_limite, total_numeros, quantidade_padrao, mostrar_seletor_quantidade, gerar_aleatorio, tema = resultado
 
     try:
         total_numeros = int(total_numeros)
@@ -91,12 +131,20 @@ def obter_configuracao_jogo():
     mostrar_seletor_quantidade = bool(mostrar_seletor_quantidade)
     gerar_aleatorio = bool(gerar_aleatorio)
 
+    if tema not in TEMAS_LOTERIA:
+        tema = TEMA_PADRAO
+
+    info_tema = obter_tema(tema)
+
     return {
         "data_limite": data_limite or configuracao_padrao["data_limite"],
         "total_numeros": total_numeros,
         "quantidade_padrao": quantidade_padrao,
         "mostrar_seletor_quantidade": mostrar_seletor_quantidade,
         "gerar_aleatorio": gerar_aleatorio,
+        "tema": tema,
+        "tema_nome": info_tema["nome"],
+        "tema_classe_css": info_tema["classe_css"],
     }
 
 
@@ -358,7 +406,8 @@ def banco():
     return render_template(
         "banco.html",
         jogos=jogos,
-        configuracao=configuracao
+        configuracao=configuracao,
+        temas_loteria=TEMAS_LOTERIA
     )
 
 
@@ -449,6 +498,44 @@ def alterar_configuracao_jogo():
         quantidade_padrao,
         mostrar_seletor_quantidade,
         gerar_aleatorio,
+    ))
+
+    conexao.commit()
+    conexao.close()
+
+    return redirect("/banco")
+
+
+# =====================================
+# ALTERAR TEMA DA LOTERIA
+# =====================================
+
+@app.route("/alterar-tema-loteria", methods=["POST"])
+def alterar_tema_loteria():
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    tema_escolhido = request.form.get("tema")
+
+    if tema_escolhido not in TEMAS_LOTERIA:
+        return redirect("/banco")
+
+    info_tema = TEMAS_LOTERIA[tema_escolhido]
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE configuracoes
+        SET tema = %s,
+            total_numeros = %s,
+            quantidade_padrao = %s
+        WHERE id = 1
+    """, (
+        tema_escolhido,
+        info_tema["total_numeros"],
+        info_tema["quantidade_padrao"],
     ))
 
     conexao.commit()

@@ -7,11 +7,35 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="{{ configuracao.tema_classe_css | default('tema-lotofacil') }}">
 
     <div class="container">
 
-       <div class="logo-lotofacil">
+        {% if configuracao.tema == 'mega-sena' %}
+
+        <div class="logo-mega">
+            <div class="logo-titulo-mega">
+                <span class="mega">MEGA</span><span class="sena">-SENA</span>
+            </div>
+            <div class="faixa-mega">
+                {{ configuracao.tema_nome }}
+            </div>
+        </div>
+
+        {% elif configuracao.tema == 'mega-sena-virada' %}
+
+        <div class="logo-mega logo-mega--virada">
+            <div class="logo-titulo-mega">
+                <span class="mega">MEGA</span><span class="sena">-SENA</span>
+            </div>
+            <div class="faixa-mega faixa-mega--virada">
+                DA VIRADA
+            </div>
+        </div>
+
+        {% elif configuracao.tema == 'lotofacil-independencia' %}
+
+        <div class="logo-lotofacil">
             <div class="logo-titulo">
                 <span class="loto">LOTO</span><span class="facil">FÁCIL</span>
             </div>
@@ -22,6 +46,17 @@
                 INDEPENDÊNCIA
             </div>
         </div>
+
+        {% else %}
+
+        <div class="logo-lotofacil">
+            <div class="logo-titulo">
+                <span class="loto">LOTO</span><span class="facil">FÁCIL</span>
+            </div>
+        </div>
+
+        {% endif %}
+
         <div class="painel">
 
             <div class="campo">
@@ -53,9 +88,9 @@
         <!-- </div> -->
 
 
-        <div class="prazo-jogos">
-            🟢 Aceitando jogos até {{ data_limite }}
-        </div>
+            <div class="prazo-jogos">
+                <span class="status-jogos" aria-hidden="true"></span> Aceitando jogos até {{ data_limite }}
+            </div>
 
         <h2 id="mensagem"></h2>
 

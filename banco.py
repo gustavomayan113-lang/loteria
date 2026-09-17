@@ -47,6 +47,7 @@ def criar_banco():
         "quantidade_padrao": "INTEGER NOT NULL DEFAULT 25",
         "mostrar_seletor_quantidade": "BOOLEAN NOT NULL DEFAULT FALSE",
         "gerar_aleatorio": "BOOLEAN NOT NULL DEFAULT TRUE",
+        "tema": "TEXT NOT NULL DEFAULT 'lotofacil'",
     }
 
     for nome_coluna, tipo_coluna in colunas.items():
@@ -83,9 +84,10 @@ def criar_banco():
                 total_numeros,
                 quantidade_padrao,
                 mostrar_seletor_quantidade,
-                gerar_aleatorio
+                gerar_aleatorio,
+                tema
             )
-            VALUES (1, '31/12/2026', 25, 25, FALSE, TRUE)
+            VALUES (1, '31/12/2026', 25, 15, FALSE, TRUE, 'lotofacil')
         """)
     else:
         cursor.execute("""
@@ -94,7 +96,8 @@ def criar_banco():
                 total_numeros = COALESCE(total_numeros, 25),
                 quantidade_padrao = COALESCE(quantidade_padrao, 25),
                 mostrar_seletor_quantidade = COALESCE(mostrar_seletor_quantidade, FALSE),
-                gerar_aleatorio = COALESCE(gerar_aleatorio, TRUE)
+                gerar_aleatorio = COALESCE(gerar_aleatorio, TRUE),
+                tema = COALESCE(tema, 'lotofacil')
             WHERE id = 1
         """)
 

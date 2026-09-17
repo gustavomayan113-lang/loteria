@@ -553,6 +553,118 @@ tbody tr:nth-child(even) {
     }
 }
 
+/* =====================================
+   SELEÇÃO DE TEMA / LOTERIA
+===================================== */
+
+.form-tema{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.selecao-temas{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:14px;
+}
+
+.tema-opcao{
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+
+    padding:16px 18px;
+
+    border:2px solid #3a4144;
+    border-radius:12px;
+
+    background:#15181a;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.tema-opcao input{
+    position:absolute;
+    top:14px;
+    right:14px;
+}
+
+.tema-opcao-nome{
+    font-size:15px;
+    font-weight:800;
+    color:#eef1f0;
+}
+
+.tema-opcao-info{
+    font-size:12px;
+    color:#9aa3a1;
+}
+
+.tema-opcao:hover{
+    border-color:#c9a227;
+    transform:translateY(-2px);
+}
+
+.tema-opcao.selecionado{
+    border-color:#f5d76e;
+    box-shadow:0 0 15px rgba(245,215,110,.25);
+}
+
+.tema-opcao--tema-mega-sena .tema-opcao-nome{
+    color:#4d9dff;
+}
+
+.tema-opcao--tema-mega-sena.selecionado{
+    background:linear-gradient(145deg, #071b33, #03101f);
+    border-color:#2c6fd1;
+    box-shadow:0 0 15px rgba(44,111,209,.35);
+}
+
+.tema-opcao--tema-mega-virada .tema-opcao-nome{
+    color:#f5d76e;
+}
+
+.tema-opcao--tema-mega-virada.selecionado{
+    background:linear-gradient(145deg, #1a1400, #000);
+    border-color:#d4af37;
+    box-shadow:0 0 18px rgba(212,175,55,.45);
+}
+
+.tema-opcao--tema-lotofacil .tema-opcao-nome{
+    color:#c084fc;
+}
+
+.tema-opcao--tema-lotofacil.selecionado{
+    background:linear-gradient(145deg, #1b0e26, #0d0713);
+    border-color:#a04dce;
+    box-shadow:0 0 15px rgba(160,77,206,.35);
+}
+
+.tema-opcao--tema-lotofacil-independencia .tema-opcao-nome{
+    color:#2ec957;
+}
+
+.tema-opcao--tema-lotofacil-independencia.selecionado{
+    background:linear-gradient(145deg, #071f0f, #030d07);
+    border-color:#2ec957;
+    box-shadow:0 0 15px rgba(46,201,87,.35);
+}
+
+@media(max-width:600px){
+
+    .selecao-temas{
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+
 
 .acoes-admin{
     display:flex;

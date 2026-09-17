@@ -61,6 +61,45 @@
 
         <div class="configuracao-prazo">
 
+            <div class="configuracao-titulo">
+                <span>🎰</span>
+                <div>
+                    <h2>Loteria ativa</h2>
+                    <p>Escolha qual loteria será exibida na página inicial. Isso define o tema visual, o total de números da tabela e a quantidade padrão de números do jogo.</p>
+                </div>
+            </div>
+
+            <form action="/alterar-tema-loteria" method="POST" class="form-tema">
+
+                <div class="selecao-temas">
+
+                    {% for chave, tema in temas_loteria.items() %}
+
+                    <label class="tema-opcao tema-opcao--{{ tema.classe_css }} {% if configuracao.tema == chave %}selecionado{% endif %}">
+                        <input
+                            type="radio"
+                            name="tema"
+                            value="{{ chave }}"
+                            {% if configuracao.tema == chave %}checked{% endif %}
+                        >
+                        <span class="tema-opcao-nome">{{ tema.nome }}</span>
+                        <span class="tema-opcao-info">{{ tema.quantidade_padrao }} de {{ tema.total_numeros }} números</span>
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+                <button type="submit" class="btn-salvar-data">
+                    SALVAR LOTERIA
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="configuracao-prazo">
+
     <div class="configuracao-titulo">
         <span>⚙</span>
         <div>
